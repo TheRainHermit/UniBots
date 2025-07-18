@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: chatbot-usc
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    autoDeploy: true
+    rootDir: chatbot_backend
+    envVars:
+      - key: PG_HOST
+        value: castor.db.elephantsql.com
+      - key: PG_NAME
+        value: tu_nombre_db
+      - key: PG_USER
+        value: tu_usuario
+      - key: PG_PASS
+        value: tu_contraseña
+      - key: PG_PORT
+        value: 5432

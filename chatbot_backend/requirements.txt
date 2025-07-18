@@ -1,0 +1,10 @@
+Flask
+psycopg[binary]
+Flask-Cors
+reportlab
+python-dotenv
+email-validator
+google-generativeai
+pypdf2
+chromadb
+# ✨ Más adelante añadiremos SQLAlchemy o marshmallow si hace falta.
