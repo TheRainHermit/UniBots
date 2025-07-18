@@ -16,7 +16,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       onLogin({
@@ -56,7 +56,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
             Iniciar Sesión
           </h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div className="relative">
@@ -71,7 +71,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
-              
+
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -118,7 +118,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-blue-100 text-sm">
-          <p>© 2024 Universidad de San Carlos. Todos los derechos reservados.</p>
+          <p>© 2025 Universidad Santiago de Cali.</p>
+          <p>Todos los derechos reservados.</p>
         </div>
       </div>
     </div>
