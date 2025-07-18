@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import Chatbot from './components/Chatbot';
 
 function App() {
