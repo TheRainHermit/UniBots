@@ -1,0 +1,216 @@
+import React, { useState } from 'react';
+import { 
+  User, 
+  BookOpen, 
+  Calendar, 
+  CreditCard, 
+  FileText, 
+  Users, 
+  Settings, 
+  LogOut,
+  GraduationCap,
+  Clock,
+  Award,
+  Library,
+  DollarSign,
+  Mail,
+  Phone,
+  MapPin,
+  Bell
+} from 'lucide-react';
+
+interface DashboardProps {
+  user: any;
+  onLogout: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
+  const [activeModule, setActiveModule] = useState('home');
+
+  const modules = [
+    {
+      id: 'academic',
+      title: 'Información Académica',
+      icon: BookOpen,
+      description: 'Consulta tu información académica',
+      color: 'bg-blue-500'
+    },
+    {
+      id: 'schedule',
+      title: 'Horarios',
+      icon: Calendar,
+      description: 'Ver horarios de clases',
+      color: 'bg-green-500'
+    },
+    {
+      id: 'grades',
+      title: 'Calificaciones',
+      icon: Award,
+      description: 'Consultar notas y calificaciones',
+      color: 'bg-purple-500'
+    },
+    {
+      id: 'enrollment',
+      title: 'Matrícula',
+      icon: CreditCard,
+      description: 'Procesos de matrícula',
+      color: 'bg-orange-500'
+    },
+    {
+      id: 'documents',
+      title: 'Documentos',
+      icon: FileText,
+      description: 'Certificados y documentos',
+      color: 'bg-red-500'
+    },
+    {
+      id: 'library',
+      title: 'Biblioteca',
+      icon: Library,
+      description: 'Servicios bibliotecarios',
+      color: 'bg-indigo-500'
+    },
+    {
+      id: 'financial',
+      title: 'Información Financiera',
+      icon: DollarSign,
+      description: 'Estado de pagos y finanzas',
+      color: 'bg-yellow-500'
+    },
+    {
+      id: 'student-services',
+      title: 'Servicios Estudiantiles',
+      icon: Users,
+      description: 'Bienestar universitario',
+      color: 'bg-pink-500'
+    }
+  ];
+
+  const quickActions = [
+    { title: 'Certificado de Notas', icon: FileText, color: 'text-blue-600' },
+    { title: 'Horario Actual', icon: Clock, color: 'text-green-600' },
+    { title: 'Estado Financiero', icon: DollarSign, color: 'text-yellow-600' },
+    { title: 'Evaluación Docente', icon: Users, color: 'text-purple-600' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <GraduationCap className="w-8 h-8 text-blue-600 mr-3" />
+              <h1 className="text-2xl font-bold text-gray-800">SINU</h1>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center text-sm text-gray-600">
+                <Bell className="w-4 h-4 mr-1" />
+                <span>3 notificaciones</span>
+              </div>
+              <div className="flex items-center">
+                <User className="w-8 h-8 text-gray-400 mr-2" />
+                <div className="text-sm">
+                  <p className="font-medium text-gray-700">{user.name}</p>
+                  <p className="text-gray-500">{user.id}</p>
+                </div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            ¡Hola, {user.name}!
+          </h2>
+          <p className="text-gray-600">
+            {user.program} - {user.semester}
+          </p>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {quickActions.map((action, index) => (
+              <button
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-left group"
+              >
+                <action.icon className={`w-8 h-8 ${action.color} mb-3 group-hover:scale-110 transition-transform`} />
+                <h4 className="font-medium text-gray-800">{action.title}</h4>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Modules */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Módulos Principales</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {modules.map((module) => (
+              <div
+                key={module.id}
+                className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden cursor-pointer transform hover:scale-105"
+                onClick={() => setActiveModule(module.id)}
+              >
+                <div className={`${module.color} h-2`}></div>
+                <div className="p-6">
+                  <module.icon className="w-12 h-12 text-gray-600 mb-4" />
+                  <h4 className="font-semibold text-gray-800 mb-2">{module.title}</h4>
+                  <p className="text-sm text-gray-600">{module.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <h3 className="text-xl font-semibold text-gray-800">Actividad Reciente</h3>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center p-4 bg-blue-50 rounded-lg">
+                <Calendar className="w-8 h-8 text-blue-600 mr-4" />
+                <div>
+                  <p className="font-medium text-gray-800">Nueva calificación disponible</p>
+                  <p className="text-sm text-gray-600">Programación Avanzada - 4.2</p>
+                </div>
+              </div>
+              <div className="flex items-center p-4 bg-green-50 rounded-lg">
+                <Mail className="w-8 h-8 text-green-600 mr-4" />
+                <div>
+                  <p className="font-medium text-gray-800">Mensaje del profesor</p>
+                  <p className="text-sm text-gray-600">Recordatorio sobre entrega de proyecto</p>
+                </div>
+              </div>
+              <div className="flex items-center p-4 bg-yellow-50 rounded-lg">
+                <DollarSign className="w-8 h-8 text-yellow-600 mr-4" />
+                <div>
+                  <p className="font-medium text-gray-800">Pago procesado</p>
+                  <p className="text-sm text-gray-600">Matrícula semestre 2024-1</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
