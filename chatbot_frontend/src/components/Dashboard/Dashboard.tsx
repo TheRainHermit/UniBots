@@ -142,7 +142,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <GraduationCap className="w-8 h-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-800">SINU</h1>
+              <h1 className="text-2xl font-bold text-gray-800">UNI BOTS</h1>
             </div>
             
             <div className="flex items-center space-x-4">

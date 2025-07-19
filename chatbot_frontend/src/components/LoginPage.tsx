@@ -65,8 +65,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-blue-700 mb-1">SINU</h1>
-            <p className="text-blue-400">Sistema de Información Universidad</p>
+            <h1 className="text-3xl font-bold text-blue-700 mb-1">UNIBOTS</h1>
+            <p className="text-blue-400">Talento Tech</p>
           </div>
 
           {/* Login Form */}
