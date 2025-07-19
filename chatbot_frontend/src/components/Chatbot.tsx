@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import ScheduleModule from './Dashboard/Modules/ScheduleModule';
 
 interface ChatbotProps {
   isAuthenticated: boolean;
@@ -65,13 +67,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
 
   const generateBotResponse = (message: string) => {
     const lowerMessage = message.toLowerCase();
-    
     if (lowerMessage.includes('contraseña')) {
       return 'Para recuperar tu contraseña, puedes usar el enlace "¿Olvidaste tu contraseña?" en la página de inicio de sesión, o contactar al soporte técnico al 300-123-4567.';
     } else if (lowerMessage.includes('calificaciones')) {
       return 'Puedes consultar tus calificaciones en el módulo "Calificaciones" del dashboard principal. Allí encontrarás todas tus notas por semestre.';
     } else if (lowerMessage.includes('horario')) {
-      return 'Tu horario está disponible en el módulo "Horarios". Puedes verlo por día, semana o descargar el horario completo en PDF.';
+      // HTML link with a special class for SPA navigation, path corregido a /schedule
+      return 'Tu horario está disponible en el módulo "Horarios". Puedes verlo dando click <span class="chatbot-link" data-path="/schedule" style="color:#2563eb; text-decoration:underline; cursor:pointer;">aquí</span>.';
     } else if (lowerMessage.includes('matrícula')) {
       return 'En el módulo "Matrícula" encontrarás toda la información sobre inscripciones, fechas importantes y documentos requeridos.';
     } else {
@@ -83,6 +85,38 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
     handleSendMessage();
     setInputMessage(option);
   };
+
+  const navigate = useNavigate();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom on new message
+  useEffect(() => {
+    if (isOpen && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isOpen]);
+
+  // SPA navigation for chatbot links
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('chatbot-link')) {
+        e.preventDefault();
+        const path = target.getAttribute('data-path') || '/schedule';
+        navigate(path);
+      }
+    };
+    const chatWindow = document.querySelector('.chatbot-messages');
+    if (chatWindow) {
+      chatWindow.addEventListener('click', handleClick);
+    }
+    return () => {
+      if (chatWindow) {
+        chatWindow.removeEventListener('click', handleClick);
+      }
+    };
+  }, [isOpen, navigate]);
 
   return (
     <>
@@ -106,7 +140,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
           </div>
 
           {/* Messages */}
-          <div className="h-80 overflow-y-auto p-4 space-y-4">
+          <div className="h-80 overflow-y-auto p-4 space-y-4 chatbot-messages">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -123,11 +157,19 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
                     {message.type === 'bot' && (
                       <Bot className="w-4 h-4 mr-2 mt-0.5 text-blue-600" />
                     )}
-                    <p className="text-sm">{message.content}</p>
+                    {message.type === 'bot' ? (
+                      <span
+                        className="text-sm"
+                        dangerouslySetInnerHTML={{ __html: message.content }}
+                      />
+                    ) : (
+                      <p className="text-sm">{message.content}</p>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Options */}
