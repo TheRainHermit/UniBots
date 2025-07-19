@@ -8,7 +8,6 @@ import {
   Users, 
   Settings, 
   LogOut,
-  GraduationCap,
   Clock,
   Award,
   Library,
@@ -18,6 +17,7 @@ import {
   MapPin,
   Bell
 } from 'lucide-react';
+import USCLogo from '../../assets/Logo USC.png';
 import { useNavigate } from 'react-router-dom';
 
 // Importa los módulos
@@ -141,8 +141,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <GraduationCap className="w-8 h-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-800">UNI BOTS</h1>
+              <img
+                src={USCLogo}
+                alt="Logo USC"
+                className="w-10 h-10 object-contain mr-3 rounded-none"
+                style={{ background: 'white' }}
+              />
+              <h1 className="text-2xl font-bold text-gray-800">UNIBOTS</h1>
             </div>
             
             <div className="flex items-center space-x-4">
