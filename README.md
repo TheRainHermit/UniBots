@@ -10,7 +10,7 @@ Integración a Whatsapp - Twilio API
 Base de Datos - PostgreSQL
 Programado en Visual Studio Code
 
-Abrir Frontend
+Abrir Frontend:
 cd chatbot_frontend
 npm install
 npm run dev
