@@ -18,6 +18,7 @@ import {
   MapPin,
   Bell
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Importa los módulos
 import GradesModule from './Modules/GradesModule';
@@ -50,6 +51,7 @@ const moduleComponents: Record<string, React.ReactNode> = {
 };
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
+  const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState('home');
 
   const modules = [
@@ -126,10 +128,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   ];
 
   const quickActions = [
-    { title: 'Certificado de Notas', icon: FileText, color: 'text-blue-600' },
-    { title: 'Horario Actual', icon: Clock, color: 'text-green-600' },
-    { title: 'Estado Financiero', icon: DollarSign, color: 'text-yellow-600' },
-    { title: 'Evaluación Docente', icon: Users, color: 'text-purple-600' }
+    { title: 'Certificado de Notas', icon: FileText, color: 'text-blue-600', route: '/documents' },
+    { title: 'Horario Actual', icon: Clock, color: 'text-green-600', route: '/schedule' },
+    { title: 'Estado Financiero', icon: DollarSign, color: 'text-yellow-600', route: '/financial' },
+    { title: 'Evaluación Docente', icon: Users, color: 'text-purple-600', route: '/teacher-evaluation' }
   ];
 
   return (
@@ -189,6 +191,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                   <button
                     key={index}
                     className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200 text-left group"
+                    onClick={() => navigate(action.route)}
                   >
                     <action.icon className={`w-8 h-8 ${action.color} mb-3 group-hover:scale-110 transition-transform`} />
                     <h4 className="font-medium text-gray-800">{action.title}</h4>
