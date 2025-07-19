@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { User, Lock, Eye, EyeOff, School } from 'lucide-react';
+import { User, Lock, Eye, EyeOff } from 'lucide-react';
+
+import uscLogo from '../assets/Logo USC.png';
+import calidadLogo from '../assets/Calidad USC.jpg';
 
 interface LoginPageProps {
   onLogin: (userData: any) => void;
@@ -39,20 +42,34 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 p-4">
-      <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-white p-3 rounded-full shadow-lg">
-              <School className="w-8 h-8 text-blue-600" />
+      <div className="w-full max-w-xl mx-auto">
+        {/* Login Card */}
+        <div className="bg-white rounded-3xl shadow-2xl px-10 py-12 md:px-16 md:py-14 mb-8 mt-4 border border-blue-100">
+          {/* Header con logo centrado */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="flex flex-row items-center justify-center gap-4 mb-4">
+              <div className="bg-white rounded-full shadow-lg flex items-center justify-center overflow-hidden border-2 border-blue-200" style={{ width: 88, height: 88 }}>
+                <img
+                  src={uscLogo}
+                  alt="Logo Universidad Santiago de Cali"
+                  className="object-contain w-20 h-20 p-1"
+                  style={{ filter: 'drop-shadow(0 2px 8px rgba(37,99,235,0.15))' }}
+                />
+              </div>
+              <div className="bg-white rounded-full shadow-lg flex items-center justify-center overflow-hidden border-2 border-blue-200" style={{ width: 88, height: 88 }}>
+                <img
+                  src={calidadLogo}
+                  alt="Logo Calidad Universidad Santiago de Cali"
+                  className="object-contain w-20 h-20 p-1"
+                  style={{ filter: 'drop-shadow(0 2px 8px rgba(37,99,235,0.15))' }}
+                />
+              </div>
             </div>
+            <h1 className="text-3xl font-bold text-blue-700 mb-1">SINU</h1>
+            <p className="text-blue-400">Sistema de Información Universidad</p>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">SINU</h1>
-          <p className="text-blue-100">Sistema de Información Universidad</p>
-        </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+          {/* Login Form */}
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
             Iniciar Sesión
           </h2>
@@ -118,8 +135,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-blue-100 text-sm">
-          <p>© 2025 Universidad Santiago de Cali.</p>
-          <p>Todos los derechos reservados.</p>
+          <p>© UNIBOTS 2025</p>
         </div>
       </div>
     </div>
