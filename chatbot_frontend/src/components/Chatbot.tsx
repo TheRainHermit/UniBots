@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
-import ScheduleModule from './Dashboard/Modules/ScheduleModule';
 
 interface ChatbotProps {
   isAuthenticated: boolean;
 }
+
+// Materias y profesores del ScheduleModule
+const scheduleData = [
+  { dia: 'Lunes', hora: '7:00 - 9:00', asignatura: 'Cálculo I', tipo: 'Diurno', profesor: 'Dra. Martínez' },
+  { dia: 'Martes', hora: '18:00 - 20:00', asignatura: 'Programación', tipo: 'Nocturno', profesor: 'Ing. Torres' },
+  { dia: 'Viernes', hora: '10:00 - 12:00', asignatura: 'Física', tipo: 'Diurno', profesor: 'Dr. Salazar' },
+];
+const materias = Array.from(new Set(scheduleData.map(s => s.asignatura)));
 
 const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +20,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
     {
       id: 1,
       type: 'bot',
-      content: isAuthenticated 
+      content: isAuthenticated
         ? '¡Hola! Soy tu asistente virtual de SINU. ¿En qué puedo ayudarte hoy?'
         : '¡Hola! Soy tu asistente virtual. ¿Necesitas ayuda con el acceso a tu cuenta?'
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
+  const [awaitingMateria, setAwaitingMateria] = useState(false);
 
   const loginOptions = [
     'Recuperar contraseña',
@@ -43,26 +51,65 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
   const currentOptions = isAuthenticated ? dashboardOptions : loginOptions;
 
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        type: 'user',
-        content: inputMessage
+    if (!inputMessage.trim()) return;
+    const newMessage = {
+      id: messages.length + 1,
+      type: 'user',
+      content: inputMessage
+    };
+    setMessages([...messages, newMessage]);
+    setInputMessage('');
+
+    setTimeout(() => {
+      // Si el bot está esperando una materia
+      if (awaitingMateria) {
+        const materia = materias.find(m => inputMessage.toLowerCase().includes(m.toLowerCase()));
+        if (materia) {
+          // Buscar info de la materia
+          const clases = scheduleData.filter(s => s.asignatura.toLowerCase() === materia.toLowerCase());
+          if (clases.length > 0) {
+            const info = clases.map(c => `${c.dia} ${c.hora} - Profesor: ${c.profesor}`).join('<br/>');
+            setMessages(prev => [...prev, {
+              id: prev.length + 1,
+              type: 'bot',
+              content: `Los horarios de <b>${materia}</b> son:<br/>${info}`
+            }]);
+          } else {
+            setMessages(prev => [...prev, {
+              id: prev.length + 1,
+              type: 'bot',
+              content: `No se encontraron horarios para la materia <b>${materia}</b>.`
+            }]);
+          }
+          setAwaitingMateria(false);
+        } else {
+          setMessages(prev => [...prev, {
+            id: prev.length + 1,
+            type: 'bot',
+            content: `No reconocí la materia. Por favor escribe el nombre exacto de la materia que tienes matriculada: <b>${materias.join(', ')}</b>`
+          }]);
+        }
+        return;
+      }
+      // Lógica normal
+      const botResponse = {
+        id: messages.length + 2,
+        type: 'bot',
+        content: generateBotResponse(inputMessage)
       };
-      
-      setMessages([...messages, newMessage]);
-      setInputMessage('');
-      
-      // Simulate bot response
-      setTimeout(() => {
-        const botResponse = {
-          id: messages.length + 2,
-          type: 'bot',
-          content: generateBotResponse(inputMessage)
-        };
-        setMessages(prev => [...prev, botResponse]);
-      }, 1000);
-    }
+      setMessages(prev => [...prev, botResponse]);
+      // Si la respuesta es la de horarios, preguntar por materia después de 2 segundos
+      if (inputMessage.toLowerCase().includes('horario')) {
+        setTimeout(() => {
+          setMessages(prev => [...prev, {
+            id: prev.length + 3,
+            type: 'bot',
+            content: `¿Quieres consultar el horario de alguna materia en específico? Escribe el nombre de la materia: <b>${materias.join(', ')}</b>`
+          }]);
+          setAwaitingMateria(true);
+        }, 2000);
+      }
+    }, 1000);
   };
 
   const generateBotResponse = (message: string) => {
@@ -70,12 +117,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
     if (lowerMessage.includes('contraseña')) {
       return 'Para recuperar tu contraseña, puedes usar el enlace "¿Olvidaste tu contraseña?" en la página de inicio de sesión, o contactar al soporte técnico al 300-123-4567.';
     } else if (lowerMessage.includes('calificaciones')) {
-      return 'Puedes consultar tus calificaciones en el módulo "Calificaciones" del dashboard principal. Allí encontrarás todas tus notas por semestre.';
+      return 'Puedes consultar tus calificaciones en el módulo "Calificaciones". Haz click <span class="chatbot-link" data-path="/grades" style="color:#2563eb; text-decoration:underline; cursor:pointer;">aquí</span> para acceder.';
     } else if (lowerMessage.includes('horario')) {
       // HTML link with a special class for SPA navigation, path corregido a /schedule
       return 'Tu horario está disponible en el módulo "Horarios". Puedes verlo dando click <span class="chatbot-link" data-path="/schedule" style="color:#2563eb; text-decoration:underline; cursor:pointer;">aquí</span>.';
     } else if (lowerMessage.includes('matrícula')) {
-      return 'En el módulo "Matrícula" encontrarás toda la información sobre inscripciones, fechas importantes y documentos requeridos.';
+      // HTML link with a special class for SPA navigation, path a /enrollment
+      return 'En el módulo "Matrícula" encontrarás toda la información sobre inscripciones. Puedes acceder dando click <span class="chatbot-link" data-path="/enrollment" style="color:#2563eb; text-decoration:underline; cursor:pointer;">aquí</span>.';
     } else {
       return 'Gracias por tu consulta. ¿Hay algo específico en lo que pueda ayudarte? Puedes usar las opciones rápidas o escribir tu pregunta.';
     }
@@ -147,11 +195,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ isAuthenticated }) => {
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs p-3 rounded-lg ${
-                    message.type === 'user'
+                  className={`max-w-xs p-3 rounded-lg ${message.type === 'user'
                       ? 'bg-blue-600 text-white rounded-br-none'
                       : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start">
                     {message.type === 'bot' && (
