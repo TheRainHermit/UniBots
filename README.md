@@ -37,3 +37,13 @@
 cd chatbot_frontend
 npm install
 npm run dev
+
+cd chatbot_backend
+# Crear y activar entorno virtual Python
+python -m venv venv
+source venv/bin/activate  # En Linux/Mac
+# venv\Scripts\activate   # En Windows
+
+# Instalar dependencias y ejecutar
+pip install -r requirements.txt
+python main.py
